@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>JSX Viewer</title>
+
+    <!-- React -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+    <!-- Babel -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  </head>
+
+  <body>
+    <div id="root"></div>
+
+    <!-- Your JSX file -->
+    <script type="text/babel">
+        const { useState } = React;
+
+const sections = [
+  { id: "intro", label: "Introduction", icon: "🚀" },
+  { id: "s3", label: "S3 Bucket Setup", icon: "🪣" },
+  { id: "features", label: "SageMaker Features", icon: "⚙️" },
+  { id: "pipeline", label: "MLOps Pipeline", icon: "🔄" },
+  { id: "project", label: "Mini Project", icon: "🧪" },
+  { id: "endpoint", label: "Deployment", icon: "🌐" },
+];
+
+const features = [
+  {
+    name: "SageMaker Studio",
+    icon: "🖥️",
+    color: "#FF6B35",
+    description:
+      "A fully integrated IDE for ML. Provides a single pane of glass for every step of ML development — data prep, training, tuning, deployment, monitoring.",
+    helps:
+      "Eliminates context-switching between multiple tools. You write notebooks, track experiments, and deploy — all in one browser tab.",
+    details: [
+      "Jupyter-based notebooks with Git integration",
+      "Built-in experiment tracking",
+      "Unified model registry access",
+      "Collaborative team environment",
+    ],
+  },
+  {
+    name: "SageMaker Data Wrangler",
+    icon: "🧹",
+    color: "#4ECDC4",
+    description:
+      "Visual data preparation tool that lets you import, explore, transform, and export data without writing code — or with custom transforms.",
+    helps:
+      "Cuts data prep time from weeks to hours. Automatically generates data quality reports and suggests transformations.",
+    details: [
+      "300+ built-in transformations",
+      "Auto data quality checks",
+      "Generates feature engineering code",
+      "Direct S3/Redshift/Athena connectors",
+    ],
+  },
+  {
+    name: "SageMaker Feature Store",
+    icon: "🗃️",
+    color: "#A8E6CF",
+    description:
+      "A centralized repository to store, retrieve, and share ML features across teams and models, with online (low latency) and offline (batch) stores.",
+    helps:
+      "Prevents feature duplication across teams. Ensures training/serving consistency by using the same feature pipeline for both.",
+    details: [
+      "Online store for real-time inference",
+      "Offline store for training",
+      "Feature versioning & lineage",
+      "Cross-team feature sharing",
+    ],
+  },
+  {
+    name: "SageMaker Training Jobs",
+    icon: "🏋️",
+    color: "#FFD93D",
+    description:
+      "Managed infrastructure to run training scripts at any scale — from a single instance to thousands of GPUs with distributed training.",
+    helps:
+      "You focus on your model code; AWS handles provisioning, scaling, spot instance interruptions, and teardown automatically.",
+    details: [
+      "Spot instance support (up to 90% savings)",
+      "Distributed training (data/model parallelism)",
+      "Built-in algorithms (XGBoost, LightGBM, etc.)",
+      "Custom Docker containers",
+    ],
+  },
+  {
+    name: "SageMaker Experiments",
+    icon: "🔬",
+    color: "#C9B1FF",
+    description:
+      "Automatically tracks every training run — hyperparameters, metrics, artifacts — so you can compare runs and reproduce results.",
+    helps:
+      "Never lose a good model again. Compare dozens of experiment runs visually and identify what hyperparameters actually moved the needle.",
+    details: [
+      "Auto-logs metrics & parameters",
+      "Side-by-side run comparison",
+      "Lineage tracking to source data",
+      "SDK + Studio UI integration",
+    ],
+  },
+  {
+    name: "SageMaker Autopilot",
+    icon: "🤖",
+    color: "#FF8B94",
+    description:
+      "Fully automated ML (AutoML) that explores hundreds of algorithms and hyperparameter combinations to find the best model for your dataset.",
+    helps:
+      "Ideal for quick baselines. It also generates the actual Python code it used, so you can learn from it and customize further.",
+    details: [
+      "Auto feature engineering",
+      "Algorithm selection & HPO",
+      "Generates explainable notebooks",
+      "Supports tabular, text, images",
+    ],
+  },
+  {
+    name: "SageMaker Hyperparameter Tuning",
+    icon: "🎯",
+    color: "#FFEAA7",
+    description:
+      "Bayesian and random search over hyperparameter spaces, running hundreds of training jobs in parallel to find optimal configurations.",
+    helps:
+      "Far more efficient than manual grid search. Bayesian optimization learns from previous runs to suggest better candidates each round.",
+    details: [
+      "Bayesian, random, grid search",
+      "Warm-starting from previous jobs",
+      "Early stopping for failed runs",
+      "Automatic metric tracking",
+    ],
+  },
+  {
+    name: "SageMaker Model Registry",
+    icon: "📦",
+    color: "#74B9FF",
+    description:
+      "A versioned catalog of all your trained models with approval workflows, metadata, and deployment history.",
+    helps:
+      "Brings software-engineering discipline to models. Only approved models can reach production — with full audit trails.",
+    details: [
+      "Model versioning & approval",
+      "Integrated CI/CD triggers",
+      "Metadata & performance tracking",
+      "Multi-account deployment support",
+    ],
+  },
+  {
+    name: "SageMaker Pipelines",
+    icon: "🔗",
+    color: "#FD79A8",
+    description:
+      "A CI/CD service for ML that lets you define, automate, and version end-to-end ML workflows as DAGs.",
+    helps:
+      "Turns ad-hoc notebooks into reproducible, auditable pipelines that can be triggered on schedule or new data arrival.",
+    details: [
+      "DAG-based pipeline definition",
+      "Caching for expensive steps",
+      "Conditional execution logic",
+      "Integration with EventBridge/Lambda",
+    ],
+  },
+  {
+    name: "SageMaker Endpoints",
+    icon: "🌐",
+    color: "#55EFC4",
+    description:
+      "Managed real-time inference infrastructure. Deploy models with a single API call and get a HTTPS endpoint with auto-scaling.",
+    helps:
+      "No server management. Auto-scales to zero on low traffic and back up on demand, with A/B testing and canary deployments built in.",
+    details: [
+      "Real-time & async inference",
+      "Multi-model endpoints",
+      "A/B testing with traffic routing",
+      "Auto-scaling & multi-AZ HA",
+    ],
+  },
+  {
+    name: "SageMaker Model Monitor",
+    icon: "📊",
+    color: "#E17055",
+    description:
+      "Continuously monitors models in production for data drift, model quality degradation, bias, and explainability shifts.",
+    helps:
+      "Catches model rot before it impacts your business. Automatically alerts and can trigger retraining pipelines when drift is detected.",
+    details: [
+      "Data & model quality monitoring",
+      "Bias & explainability drift",
+      "Scheduled & continuous monitoring",
+      "CloudWatch integration & alerts",
+    ],
+  },
+  {
+    name: "SageMaker Clarify",
+    icon: "⚖️",
+    color: "#A29BFE",
+    description:
+      "Detects bias in datasets and models, and provides explainability (SHAP values) for individual predictions.",
+    helps:
+      "Helps you build fair, trustworthy models. Regulatory compliance often requires explainability — Clarify generates the reports automatically.",
+    details: [
+      "Pre-training & post-training bias",
+      "SHAP-based feature importance",
+      "Partial dependence plots",
+      "Integrated with Pipelines",
+    ],
+  },
+];
+
+const pipelineSteps = [
+  { step: "01", name: "Ingest", desc: "Raw data lands in S3", icon: "📥", color: "#FF6B35" },
+  { step: "02", name: "Process", desc: "Data Wrangler / Processing Job cleans & transforms", icon: "🔧", color: "#4ECDC4" },
+  { step: "03", name: "Feature Store", desc: "Engineered features stored for reuse", icon: "🗃️", color: "#A8E6CF" },
+  { step: "04", name: "Train", desc: "Training Job runs on managed instances", icon: "🏋️", color: "#FFD93D" },
+  { step: "05", name: "Evaluate", desc: "Metrics logged; bias & explainability checked", icon: "🔬", color: "#C9B1FF" },
+  { step: "06", name: "Register", desc: "Model versioned & approved in Registry", icon: "📦", color: "#74B9FF" },
+  { step: "07", name: "Deploy", desc: "Endpoint created with auto-scaling", icon: "🚀", color: "#FD79A8" },
+  { step: "08", name: "Monitor", desc: "Model Monitor watches for drift 24/7", icon: "📊", color: "#E17055" },
+];
+
+const projectCode = {
+  s3Setup: `import boto3
+
+# ─── Create S3 Bucket ─────────────────────────────────────────────
+s3 = boto3.client('s3', region_name='us-east-1')
+
+BUCKET_NAME = 'sagemaker-mlops-demo-bucket'
+REGION      = 'us-east-1'
+
+s3.create_bucket(Bucket=BUCKET_NAME)
+
+# Upload the dataset
+s3.upload_file(
+    'titanic.csv',
+    BUCKET_NAME,
+    'data/raw/titanic.csv'
+)
+
+print(f"✅ Bucket '{BUCKET_NAME}' created and data uploaded.")`,
+
+  processingJob: `import sagemaker
+from sagemaker.sklearn.processing import SKLearnProcessor
+from sagemaker.processing import ProcessingInput, ProcessingOutput
+
+sess   = sagemaker.Session()
+role   = sagemaker.get_execution_role()
+
+# ─── Define Processing Job ────────────────────────────────────────
+processor = SKLearnProcessor(
+    framework_version='1.2-1',
+    role=role,
+    instance_type='ml.m5.large',
+    instance_count=1,
+    sagemaker_session=sess,
+)
+
+processor.run(
+    code='preprocessing.py',          # Your transform script
+    inputs=[
+        ProcessingInput(
+            source=f's3://{BUCKET_NAME}/data/raw/titanic.csv',
+            destination='/opt/ml/processing/input',
+        )
+    ],
+    outputs=[
+        ProcessingOutput(
+            source='/opt/ml/processing/output/train',
+            destination=f's3://{BUCKET_NAME}/data/processed/train',
+        ),
+        ProcessingOutput(
+            source='/opt/ml/processing/output/test',
+            destination=f's3://{BUCKET_NAME}/data/processed/test',
+        ),
+    ],
+)
+print("✅ Processing job complete.")`,
+
+  preprocessScript: `# preprocessing.py  ─── runs INSIDE the Processing container ───
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import LabelEncoder
+import os
+
+INPUT  = '/opt/ml/processing/input/titanic.csv'
+TRAIN  = '/opt/ml/processing/output/train'
+TEST   = '/opt/ml/processing/output/test'
+
+os.makedirs(TRAIN, exist_ok=True)
+os.makedirs(TEST,  exist_ok=True)
+
+df = pd.read_csv(INPUT)
+
+# ── Feature Engineering ──────────────────────────────────────────
+df['Age'].fillna(df['Age'].median(), inplace=True)
+df['Embarked'].fillna('S', inplace=True)
+df.drop(['Name', 'Ticket', 'Cabin', 'PassengerId'], axis=1, inplace=True)
+
+le = LabelEncoder()
+df['Sex']      = le.fit_transform(df['Sex'])
+df['Embarked'] = le.fit_transform(df['Embarked'])
+
+# ── Split ────────────────────────────────────────────────────────
+target = 'Survived'
+X = df.drop(target, axis=1)
+y = df[target]
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+train_df = pd.concat([y_train, X_train], axis=1)
+test_df  = pd.concat([y_test,  X_test],  axis=1)
+
+train_df.to_csv(f'{TRAIN}/train.csv', index=False)
+test_df.to_csv( f'{TEST}/test.csv',   index=False)
+
+print("✅ Preprocessing done. Train:", len(train_df), "Test:", len(test_df))`,
+
+  trainingJob: `import sagemaker
+from sagemaker.xgboost import XGBoost
+
+role = sagemaker.get_execution_role()
+
+# ─── Configure XGBoost Estimator ─────────────────────────────────
+xgb = XGBoost(
+    entry_point='train.py',
+    framework_version='1.7-1',
+    role=role,
+    instance_type='ml.m5.xlarge',
+    instance_count=1,
+    hyperparameters={
+        'max_depth':        5,
+        'eta':              0.2,
+        'gamma':            4,
+        'min_child_weight': 6,
+        'subsample':        0.8,
+        'num_round':        100,
+        'objective':        'binary:logistic',
+        'eval_metric':      'auc',
+    },
+    use_spot_instances=True,      # 💰 up to 90% cheaper
+    max_wait=3600,
+    max_run=1800,
+)
+
+# ─── Launch Training ─────────────────────────────────────────────
+xgb.fit({
+    'train': f's3://{BUCKET_NAME}/data/processed/train',
+    'validation': f's3://{BUCKET_NAME}/data/processed/test',
+})
+
+print("✅ Training complete. Model artifact:", xgb.model_data)`,
+
+  trainScript: `# train.py ─── runs INSIDE the Training container ───────────────
+import argparse, os, xgboost as xgb, pandas as pd
+from sklearn.metrics import roc_auc_score
+
+def parse_args():
+    p = argparse.ArgumentParser()
+    p.add_argument('--max_depth',        type=int,   default=5)
+    p.add_argument('--eta',              type=float, default=0.2)
+    p.add_argument('--num_round',        type=int,   default=100)
+    p.add_argument('--train',            type=str,   default=os.environ['SM_CHANNEL_TRAIN'])
+    p.add_argument('--validation',       type=str,   default=os.environ['SM_CHANNEL_VALIDATION'])
+    p.add_argument('--model_dir',        type=str,   default=os.environ['SM_MODEL_DIR'])
+    return p.parse_args()
+
+args = parse_args()
+
+# ── Load Data ────────────────────────────────────────────────────
+train = pd.read_csv(f'{args.train}/train.csv')
+val   = pd.read_csv(f'{args.validation}/test.csv')
+
+X_train, y_train = train.drop('Survived',axis=1), train['Survived']
+X_val,   y_val   = val.drop('Survived',axis=1),   val['Survived']
+
+dtrain = xgb.DMatrix(X_train, label=y_train)
+dval   = xgb.DMatrix(X_val,   label=y_val)
+
+# ── Train ────────────────────────────────────────────────────────
+params = {'max_depth': args.max_depth, 'eta': args.eta,
+          'objective': 'binary:logistic', 'eval_metric': 'auc'}
+
+model = xgb.train(
+    params, dtrain, args.num_round,
+    evals=[(dtrain,'train'),(dval,'validation')],
+    early_stopping_rounds=10, verbose_eval=10,
+)
+
+# ── Evaluate & Save ───────────────────────────────────────────────
+preds = model.predict(dval)
+auc   = roc_auc_score(y_val, preds)
+print(f"\\n🏆 Validation AUC: {auc:.4f}")
+
+model.save_model(f'{args.model_dir}/xgb_model.json')
+print("✅ Model saved.")`,
+
+  registerDeploy: `import sagemaker
+from sagemaker.model import Model
+from sagemaker import ModelPackage
+
+sess  = sagemaker.Session()
+role  = sagemaker.get_execution_role()
+
+# ─── Register in Model Registry ──────────────────────────────────
+model_package = xgb.register(
+    content_types=['text/csv'],
+    response_types=['text/csv'],
+    inference_instances=['ml.m5.large'],
+    transform_instances=['ml.m5.large'],
+    model_package_group_name='TitanicSurvivorModels',
+    approval_status='PendingManualApproval',  # Requires human sign-off
+    description='XGBoost Titanic survival predictor v1',
+)
+
+print("📦 Model registered:", model_package.model_package_arn)
+
+# ─── (After Approval) Deploy to Endpoint ─────────────────────────
+predictor = xgb.deploy(
+    initial_instance_count=1,
+    instance_type='ml.m5.large',
+    endpoint_name='titanic-survivor-endpoint',
+)
+
+print("🌐 Endpoint live:", predictor.endpoint_name)`,
+
+  inference: `import boto3, json
+
+runtime = boto3.client('sagemaker-runtime', region_name='us-east-1')
+
+# ─── Sample passenger (Pclass, Sex, Age, SibSp, Parch, Fare, Embarked)
+passenger = "3,1,22,1,0,7.25,2"   # 3rd class, male, 22yr old — low survival odds
+
+response = runtime.invoke_endpoint(
+    EndpointName='titanic-survivor-endpoint',
+    ContentType='text/csv',
+    Body=passenger,
+)
+
+prob = float(response['Body'].read().decode('utf-8'))
+prediction = "Survived 🟢" if prob > 0.5 else "Did Not Survive 🔴"
+
+print(f"Survival Probability : {prob:.2%}")
+print(f"Prediction           : {prediction}")`,
+
+  monitoring: `import sagemaker
+from sagemaker.model_monitor import DefaultModelMonitor
+from sagemaker.model_monitor.dataset_format import DatasetFormat
+
+monitor = DefaultModelMonitor(
+    role=sagemaker.get_execution_role(),
+    instance_count=1,
+    instance_type='ml.m5.xlarge',
+    volume_size_in_gb=20,
+    max_runtime_in_seconds=3600,
+)
+
+# ─── Suggest a baseline from training data ────────────────────────
+monitor.suggest_baseline(
+    baseline_dataset=f's3://{BUCKET_NAME}/data/processed/train/train.csv',
+    dataset_format=DatasetFormat.csv(header=True),
+)
+
+# ─── Schedule hourly monitoring ───────────────────────────────────
+monitor.create_monitoring_schedule(
+    monitor_schedule_name='titanic-drift-monitor',
+    endpoint_input='titanic-survivor-endpoint',
+    output_s3_uri=f's3://{BUCKET_NAME}/monitoring/reports',
+    statistics=monitor.baseline_statistics(),
+    constraints=monitor.suggested_constraints(),
+    schedule_cron_expression='cron(0 * ? * * *)',   # every hour
+)
+
+print("📊 Monitoring schedule created. Drift alerts will go to CloudWatch.")`,
+};
+
+const CodeBlock = ({ code, title }) => {
+  const [copied, setCopied] = useState(false);
+  const copy = () => {
+    navigator.clipboard.writeText(code);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+  return (
+    <div style={{ marginBottom: 24, borderRadius: 12, overflow: "hidden", border: "1px solid #1e3a5f" }}>
+      <div style={{
+        display: "flex", justifyContent: "space-between", alignItems: "center",
+        background: "#0d2137", padding: "10px 16px",
+      }}>
+        <span style={{ color: "#64b5f6", fontSize: 13, fontFamily: "monospace", fontWeight: 600 }}>{title}</span>
+        <button onClick={copy} style={{
+          background: copied ? "#1b5e20" : "#1e3a5f", color: copied ? "#69f0ae" : "#90caf9",
+          border: "none", borderRadius: 6, padding: "4px 12px", cursor: "pointer",
+          fontSize: 12, fontWeight: 600, transition: "all 0.2s",
+        }}>
+          {copied ? "✓ Copied" : "Copy"}
+        </button>
+      </div>
+      <pre style={{
+        margin: 0, padding: 20, background: "#060f1a",
+        color: "#e2e8f0", fontSize: 12.5, lineHeight: 1.8,
+        overflowX: "auto", fontFamily: "'JetBrains Mono', 'Fira Code', monospace",
+        whiteSpace: "pre",
+      }}>
+        <code>{code}</code>
+      </pre>
+    </div>
+  );
+};
+
+const Badge = ({ text, color }) => (
+  <span style={{
+    background: color + "22", color: color, border: `1px solid ${color}55`,
+    borderRadius: 6, padding: "2px 10px", fontSize: 11, fontWeight: 700,
+    letterSpacing: "0.05em", textTransform: "uppercase",
+  }}>{text}</span>
+);
+
+function SageMakerGuide() {
+  const [active, setActive] = useState("intro");
+  const [expandedFeature, setExpandedFeature] = useState(null);
+  const [activeCode, setActiveCode] = useState("s3Setup");
+
+  const codeFiles = [
+    { key: "s3Setup",        label: "1. S3 Setup",        title: "s3_setup.py" },
+    { key: "processingJob",  label: "2. Processing Job",  title: "processing_job.py" },
+    { key: "preprocessScript", label: "3. Preprocess Script", title: "preprocessing.py" },
+    { key: "trainingJob",    label: "4. Training Job",    title: "training_job.py" },
+    { key: "trainScript",    label: "5. Train Script",    title: "train.py" },
+    { key: "registerDeploy", label: "6. Register & Deploy", title: "register_deploy.py" },
+    { key: "inference",      label: "7. Inference",       title: "invoke_endpoint.py" },
+    { key: "monitoring",     label: "8. Monitoring",      title: "model_monitor.py" },
+  ];
+
+  return (
+    <div style={{
+      minHeight: "100vh", background: "#030c18",
+      fontFamily: "'IBM Plex Sans', 'Segoe UI', sans-serif", color: "#cdd6f4",
+    }}>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap');
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #060f1a; }
+        ::-webkit-scrollbar-thumb { background: #1e3a5f; border-radius: 3px; }
+        * { box-sizing: border-box; }
+      `}</style>
+
+      {/* Header */}
+      <div style={{
+        background: "linear-gradient(135deg, #060f1a 0%, #0a1f35 50%, #0d2137 100%)",
+        borderBottom: "1px solid #1e3a5f",
+        padding: "40px 40px 30px",
+        position: "relative", overflow: "hidden",
+      }}>
+        <div style={{
+          position: "absolute", top: -60, right: -60, width: 300, height: 300,
+          background: "radial-gradient(circle, #FF6B3522 0%, transparent 70%)",
+          borderRadius: "50%",
+        }} />
+        <div style={{
+          position: "absolute", bottom: -40, left: 200, width: 200, height: 200,
+          background: "radial-gradient(circle, #4ECDC422 0%, transparent 70%)",
+          borderRadius: "50%",
+        }} />
+        <div style={{ position: "relative", maxWidth: 1100, margin: "0 auto" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 12 }}>
+            <div style={{
+              background: "linear-gradient(135deg, #FF6B35, #ff9a72)",
+              borderRadius: 12, padding: "8px 14px", fontSize: 24,
+            }}>☁️</div>
+            <div>
+              <div style={{ fontSize: 11, color: "#64b5f6", fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase" }}>Complete Guide</div>
+              <h1 style={{ margin: 0, fontSize: 30, fontWeight: 700, color: "#fff", lineHeight: 1.1 }}>
+                AWS SageMaker <span style={{ color: "#FF6B35" }}>MLOps</span>
+              </h1>
+            </div>
+          </div>
+          <p style={{ margin: 0, color: "#8aa3c1", fontSize: 15, maxWidth: 600 }}>
+            From S3 bucket creation to production endpoints — every feature explained, with a full working Titanic survival prediction project.
+          </p>
+          <div style={{ display: "flex", gap: 10, marginTop: 20, flexWrap: "wrap" }}>
+            <Badge text="Beginner Friendly" color="#4ECDC4" />
+            <Badge text="Production Ready" color="#FF6B35" />
+            <Badge text="Full Code Included" color="#C9B1FF" />
+            <Badge text="MLOps Best Practices" color="#FFD93D" />
+          </div>
+        </div>
+      </div>
+
+      <div style={{ display: "flex", maxWidth: 1100, margin: "0 auto", padding: "0 20px" }}>
+        {/* Sidebar */}
+        <div style={{
+          width: 200, flexShrink: 0, paddingTop: 30,
+          position: "sticky", top: 0, height: "100vh", overflowY: "auto",
+        }}>
+          {sections.map(s => (
+            <button
+              key={s.id}
+              onClick={() => setActive(s.id)}
+              style={{
+                display: "flex", alignItems: "center", gap: 10, width: "100%",
+                padding: "10px 14px", borderRadius: 8, marginBottom: 4,
+                background: active === s.id ? "#0d2137" : "transparent",
+                border: active === s.id ? "1px solid #1e3a5f" : "1px solid transparent",
+                color: active === s.id ? "#FF6B35" : "#8aa3c1",
+                cursor: "pointer", textAlign: "left", fontSize: 13, fontWeight: 600,
+                transition: "all 0.2s",
+              }}
+            >
+              <span>{s.icon}</span>{s.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Content */}
+        <div style={{ flex: 1, padding: "30px 0 30px 30px", minWidth: 0 }}>
+
+          {/* ── INTRO ── */}
+          {active === "intro" && (
+            <div>
+              <h2 style={{ color: "#fff", fontSize: 24, marginTop: 0 }}>What is AWS SageMaker?</h2>
+              <p style={{ color: "#8aa3c1", lineHeight: 1.8 }}>
+                Amazon SageMaker is a fully managed ML platform that covers every phase of the machine learning lifecycle — from data preparation to production monitoring. Instead of stitching together your own infrastructure, SageMaker gives you managed compute, pre-built algorithms, automated workflows, and governance tools out of the box.
+              </p>
+
+              <div style={{
+                background: "#0a1f35", border: "1px solid #1e3a5f", borderRadius: 12, padding: 24, marginBottom: 24,
+              }}>
+                <h3 style={{ color: "#4ECDC4", marginTop: 0, fontSize: 16 }}>Why SageMaker for MLOps?</h3>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+                  {[
+                    ["🔄 Reproducibility", "Every run is versioned — data, code, hyperparameters, metrics."],
+                    ["🚀 Scale", "Go from 1 to 1000 GPUs without changing your code."],
+                    ["💰 Cost Control", "Spot instances, auto-scaling, and pay-per-use billing."],
+                    ["🛡️ Governance", "Model registry, approval workflows, bias checks, audit trails."],
+                    ["🔗 Integration", "Native connectors to S3, Glue, Redshift, Lambda, CloudWatch."],
+                    ["👥 Collaboration", "Studio gives teams a shared environment with Git integration."],
+                  ].map(([t, d]) => (
+                    <div key={t} style={{ background: "#060f1a", borderRadius: 8, padding: 14 }}>
+                      <div style={{ color: "#fff", fontWeight: 600, fontSize: 13, marginBottom: 4 }}>{t}</div>
+                      <div style={{ color: "#8aa3c1", fontSize: 12, lineHeight: 1.6 }}>{d}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div style={{ background: "#0d2137", border: "1px solid #FF6B3533", borderRadius: 12, padding: 24 }}>
+                <h3 style={{ color: "#FF6B35", marginTop: 0, fontSize: 16 }}>📐 The MLOps Lifecycle in SageMaker</h3>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                  {["S3 Data Lake", "→", "Data Wrangler", "→", "Feature Store", "→", "Training Jobs", "→", "Experiments", "→", "Model Registry", "→", "Endpoints", "→", "Model Monitor"].map((step, i) => (
+                    <span key={i} style={{
+                      color: step === "→" ? "#1e3a5f" : "#cdd6f4",
+                      background: step === "→" ? "transparent" : "#060f1a",
+                      border: step === "→" ? "none" : "1px solid #1e3a5f",
+                      borderRadius: 6, padding: step === "→" ? "4px 2px" : "4px 10px",
+                      fontSize: 12, fontWeight: 600,
+                    }}>{step}</span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ── S3 ── */}
+          {active === "s3" && (
+            <div>
+              <h2 style={{ color: "#fff", fontSize: 24, marginTop: 0 }}>🪣 S3 Bucket Setup</h2>
+              <p style={{ color: "#8aa3c1", lineHeight: 1.8 }}>
+                Amazon S3 is the backbone of every SageMaker workflow. All training data, processed datasets, model artifacts, and monitoring reports live in S3. SageMaker reads from and writes to S3 at every step.
+              </p>
+
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 24 }}>
+                {[
+                  ["📂 Recommended Folder Structure", "data/raw/ — original uploads\ndata/processed/ — cleaned datasets\nmodels/ — training artifacts\nmonitoring/ — drift reports\ncode/ — scripts & notebooks"],
+                  ["🔐 IAM Permissions Required", "s3:GetObject\ns3:PutObject\ns3:DeleteObject\ns3:ListBucket\n→ Attach to SageMaker Execution Role"],
+                ].map(([title, content]) => (
+                  <div key={title} style={{ background: "#0a1f35", border: "1px solid #1e3a5f", borderRadius: 10, padding: 18 }}>
+                    <div style={{ color: "#4ECDC4", fontWeight: 700, fontSize: 13, marginBottom: 10 }}>{title}</div>
+                    <pre style={{ margin: 0, color: "#8aa3c1", fontSize: 12, lineHeight: 1.8, fontFamily: "monospace", whiteSpace: "pre-wrap" }}>{content}</pre>
+                  </div>
+                ))}
+              </div>
+
+              <CodeBlock title="create_bucket.py" code={`import boto3
+
+s3     = boto3.client('s3', region_name='us-east-1')
+BUCKET = 'my-sagemaker-mlops-bucket'
+REGION = 'us-east-1'
+
+# ── Create Bucket ────────────────────────────────────────────────
+s3.create_bucket(Bucket=BUCKET)
+
+# ── Versioning (prevents accidental data loss) ───────────────────
+s3.put_bucket_versioning(
+    Bucket=BUCKET,
+    VersioningConfiguration={'Status': 'Enabled'}
+)
+
+# ── Server-Side Encryption ───────────────────────────────────────
+s3.put_bucket_encryption(
+    Bucket=BUCKET,
+    ServerSideEncryptionConfiguration={
+        'Rules': [{'ApplyServerSideEncryptionByDefault': {'SSEAlgorithm': 'AES256'}}]
+    }
+)
+
+print(f"✅ Bucket '{BUCKET}' created with versioning + encryption.")`} />
+
+              <CodeBlock title="fetch_data_from_s3.py" code={`import boto3, pandas as pd
+from io import StringIO
+
+s3     = boto3.client('s3')
+BUCKET = 'my-sagemaker-mlops-bucket'
+
+# ── Option 1: Download to local file ────────────────────────────
+s3.download_file(BUCKET, 'data/raw/titanic.csv', '/tmp/titanic.csv')
+df = pd.read_csv('/tmp/titanic.csv')
+
+# ── Option 2: Read directly into DataFrame (no temp file) ────────
+obj = s3.get_object(Bucket=BUCKET, Key='data/raw/titanic.csv')
+df  = pd.read_csv(StringIO(obj['Body'].read().decode('utf-8')))
+
+# ── Option 3: Using SageMaker's built-in S3 utilities ────────────
+import sagemaker
+from sagemaker.s3 import S3Downloader
+
+data_uri = f's3://{BUCKET}/data/raw/titanic.csv'
+S3Downloader.download(data_uri, '/tmp/')
+
+print(f"✅ Loaded {len(df):,} rows × {len(df.columns)} columns")
+print(df.head())`} />
+            </div>
+          )}
+
+          {/* ── FEATURES ── */}
+          {active === "features" && (
+            <div>
+              <h2 style={{ color: "#fff", fontSize: 24, marginTop: 0 }}>⚙️ SageMaker Features Explained</h2>
+              <p style={{ color: "#8aa3c1", marginBottom: 24 }}>Click any feature to expand the full explanation.</p>
+              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                {features.map((f, i) => (
+                  <div
+                    key={i}
+                    style={{
+                      background: expandedFeature === i ? "#0a1f35" : "#060f1a",
+                      border: `1px solid ${expandedFeature === i ? f.color + "55" : "#1e3a5f"}`,
+                      borderRadius: 12, overflow: "hidden", transition: "all 0.2s",
+                    }}
+                  >
+                    <button
+                      onClick={() => setExpandedFeature(expandedFeature === i ? null : i)}
+                      style={{
+                        display: "flex", alignItems: "center", gap: 14, width: "100%",
+                        padding: "16px 20px", background: "transparent", border: "none",
+                        cursor: "pointer", textAlign: "left",
+                      }}
+                    >
+                      <span style={{
+                        fontSize: 22, background: f.color + "22", borderRadius: 8,
+                        width: 44, height: 44, display: "flex", alignItems: "center", justifyContent: "center",
+                        flexShrink: 0,
+                      }}>{f.icon}</span>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ color: "#fff", fontWeight: 700, fontSize: 15 }}>{f.name}</div>
+                        <div style={{ color: "#8aa3c1", fontSize: 12, marginTop: 2, lineHeight: 1.4 }}>{f.description.slice(0, 80)}…</div>
+                      </div>
+                      <span style={{ color: f.color, fontSize: 20 }}>{expandedFeature === i ? "▲" : "▼"}</span>
+                    </button>
+                    {expandedFeature === i && (
+                      <div style={{ padding: "0 20px 20px" }}>
+                        <div style={{ background: "#060f1a", borderRadius: 8, padding: 16, marginBottom: 12 }}>
+                          <div style={{ color: "#cdd6f4", fontSize: 13, lineHeight: 1.7 }}>{f.description}</div>
+                        </div>
+                        <div style={{ background: f.color + "11", border: `1px solid ${f.color}33`, borderRadius: 8, padding: 14, marginBottom: 12 }}>
+                          <div style={{ color: f.color, fontWeight: 700, fontSize: 12, marginBottom: 6 }}>💡 HOW IT HELPS YOUR ML WORKFLOW</div>
+                          <div style={{ color: "#cdd6f4", fontSize: 13, lineHeight: 1.6 }}>{f.helps}</div>
+                        </div>
+                        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+                          {f.details.map((d, j) => (
+                            <div key={j} style={{
+                              background: "#0a1f35", border: "1px solid #1e3a5f",
+                              borderRadius: 6, padding: "8px 12px",
+                              color: "#8aa3c1", fontSize: 12, display: "flex", alignItems: "center", gap: 8,
+                            }}>
+                              <span style={{ color: f.color }}>✓</span> {d}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* ── PIPELINE ── */}
+          {active === "pipeline" && (
+            <div>
+              <h2 style={{ color: "#fff", fontSize: 24, marginTop: 0 }}>🔄 End-to-End MLOps Pipeline</h2>
+              <p style={{ color: "#8aa3c1", lineHeight: 1.8, marginBottom: 28 }}>
+                SageMaker Pipelines lets you chain these steps into a versioned, reproducible DAG that can be triggered automatically on schedule or new data.
+              </p>
+              <div style={{ position: "relative" }}>
+                {pipelineSteps.map((s, i) => (
+                  <div key={i} style={{ display: "flex", gap: 20, marginBottom: 16, alignItems: "flex-start" }}>
+                    <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                      <div style={{
+                        width: 48, height: 48, borderRadius: "50%", flexShrink: 0,
+                        background: s.color + "22", border: `2px solid ${s.color}`,
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                        fontSize: 20,
+                      }}>{s.icon}</div>
+                      {i < pipelineSteps.length - 1 && (
+                        <div style={{ width: 2, flex: 1, minHeight: 20, background: "#1e3a5f", marginTop: 4 }} />
+                      )}
+                    </div>
+                    <div style={{
+                      flex: 1, background: "#0a1f35", border: "1px solid #1e3a5f",
+                      borderRadius: 10, padding: "14px 18px", marginBottom: 4,
+                    }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 4 }}>
+                        <span style={{
+                          color: s.color, fontSize: 10, fontWeight: 800, fontFamily: "monospace",
+                          letterSpacing: "0.1em",
+                        }}>STEP {s.step}</span>
+                        <span style={{ color: "#fff", fontWeight: 700, fontSize: 14 }}>{s.name}</span>
+                      </div>
+                      <div style={{ color: "#8aa3c1", fontSize: 13 }}>{s.desc}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div style={{ background: "#0a1f35", border: "1px solid #C9B1FF55", borderRadius: 12, padding: 20, marginTop: 10 }}>
+                <div style={{ color: "#C9B1FF", fontWeight: 700, fontSize: 13, marginBottom: 12 }}>🔗 SageMaker Pipelines SDK — Skeleton</div>
+                <CodeBlock title="pipeline_definition.py" code={`from sagemaker.workflow.pipeline import Pipeline
+from sagemaker.workflow.steps import ProcessingStep, TrainingStep, RegisterModel
+from sagemaker.workflow.conditions import ConditionGreaterThanOrEqualTo
+from sagemaker.workflow.condition_step import ConditionStep
+from sagemaker.workflow.parameters import ParameterFloat
+
+# ── Pipeline Parameters ──────────────────────────────────────────
+min_auc = ParameterFloat(name='MinAUCThreshold', default_value=0.80)
+
+# ── Steps ────────────────────────────────────────────────────────
+step_process  = ProcessingStep(name='Preprocess', processor=processor, ...)
+step_train    = TrainingStep(name='Train',         estimator=xgb,       ...)
+step_register = RegisterModel(name='RegisterModel', estimator=xgb,      ...)
+
+# ── Conditional Registration (only if AUC > threshold) ───────────
+cond = ConditionGreaterThanOrEqualTo(
+    left=JsonGet(step_name='Evaluate', property_file=eval_report, json_path='auc'),
+    right=min_auc,
+)
+step_cond = ConditionStep(
+    name='CheckAUC',
+    conditions=[cond],
+    if_steps=[step_register],
+    else_steps=[],
+)
+
+# ── Assemble & Run ────────────────────────────────────────────────
+pipeline = Pipeline(
+    name='TitanicMLOpsPipeline',
+    parameters=[min_auc],
+    steps=[step_process, step_train, step_cond],
+)
+pipeline.upsert(role_arn=role)
+pipeline.start()`} />
+              </div>
+            </div>
+          )}
+
+          {/* ── PROJECT ── */}
+          {active === "project" && (
+            <div>
+              <h2 style={{ color: "#fff", fontSize: 24, marginTop: 0 }}>🧪 Mini Project: Titanic Survival Predictor</h2>
+              <div style={{
+                background: "linear-gradient(135deg, #0a1f35, #0d2137)",
+                border: "1px solid #FF6B3533", borderRadius: 12, padding: 20, marginBottom: 24,
+              }}>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 12, marginBottom: 16 }}>
+                  {[["Dataset", "Titanic (Kaggle)", "#4ECDC4"], ["Task", "Binary Classification", "#FFD93D"], ["Algorithm", "XGBoost on SageMaker", "#FF6B35"]].map(([k,v,c]) => (
+                    <div key={k} style={{ background: "#060f1a", borderRadius: 8, padding: 14, textAlign: "center" }}>
+                      <div style={{ color: c, fontSize: 10, fontWeight: 800, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 4 }}>{k}</div>
+                      <div style={{ color: "#fff", fontWeight: 700, fontSize: 13 }}>{v}</div>
+                    </div>
+                  ))}
+                </div>
+                <div style={{ color: "#8aa3c1", fontSize: 13, lineHeight: 1.7 }}>
+                  We'll predict whether a Titanic passenger survived, using the classic dataset. This project walks through all 8 code files covering every SageMaker service — a perfect end-to-end MLOps reference.
+                </div>
+              </div>
+
+              {/* Code file tabs */}
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 16 }}>
+                {codeFiles.map(f => (
+                  <button
+                    key={f.key}
+                    onClick={() => setActiveCode(f.key)}
+                    style={{
+                      background: activeCode === f.key ? "#FF6B35" : "#0a1f35",
+                      color: activeCode === f.key ? "#fff" : "#8aa3c1",
+                      border: "1px solid",
+                      borderColor: activeCode === f.key ? "#FF6B35" : "#1e3a5f",
+                      borderRadius: 6, padding: "5px 12px", cursor: "pointer",
+                      fontSize: 11, fontWeight: 600, transition: "all 0.2s",
+                    }}
+                  >
+                    {f.label}
+                  </button>
+                ))}
+              </div>
+
+              <CodeBlock
+                title={codeFiles.find(f => f.key === activeCode)?.title}
+                code={projectCode[activeCode]}
+              />
+
+              <div style={{ background: "#0a1f35", border: "1px solid #4ECDC433", borderRadius: 10, padding: 18 }}>
+                <div style={{ color: "#4ECDC4", fontWeight: 700, fontSize: 13, marginBottom: 10 }}>📋 Project Checklist</div>
+                {[
+                  "Download Titanic dataset from Kaggle",
+                  "Create S3 bucket with versioning & encryption",
+                  "Upload raw CSV to s3://bucket/data/raw/",
+                  "Run Processing Job (preprocessing.py cleans the data)",
+                  "Launch Training Job with spot instances",
+                  "Check Experiments dashboard for metrics",
+                  "Register model — set approval to 'Approved'",
+                  "Deploy to real-time endpoint",
+                  "Invoke endpoint with a sample passenger",
+                  "Create Model Monitor schedule for drift detection",
+                ].map((item, i) => (
+                  <div key={i} style={{ display: "flex", alignItems: "center", gap: 10, padding: "6px 0", borderBottom: i < 9 ? "1px solid #1e3a5f" : "none" }}>
+                    <span style={{ color: "#4ECDC4", fontWeight: 700, fontSize: 11 }}>{String(i+1).padStart(2,'0')}</span>
+                    <span style={{ color: "#cdd6f4", fontSize: 13 }}>{item}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* ── ENDPOINT ── */}
+          {active === "endpoint" && (
+            <div>
+              <h2 style={{ color: "#fff", fontSize: 24, marginTop: 0 }}>🌐 Deployment & Production</h2>
+
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 24 }}>
+                {[
+                  { title: "Real-Time Endpoint", color: "#4ECDC4", items: ["Low-latency (ms) synchronous response", "Auto-scaling up & down", "Multi-model for cost efficiency", "Best for: live user-facing APIs"] },
+                  { title: "Async Inference", color: "#FFD93D", items: ["For large payloads or long inference", "Queued requests via SQS", "Results saved to S3", "Best for: document processing, video"] },
+                  { title: "Batch Transform", color: "#C9B1FF", items: ["Score entire datasets at once", "No endpoint needed (no idle cost)", "Parallel processing across instances", "Best for: nightly batch scoring"] },
+                  { title: "Serverless Inference", color: "#FF6B35", items: ["Scales to zero (pay per request)", "Cold start ~1–2 seconds", "No instance management", "Best for: low-traffic, dev/test"] },
+                ].map(t => (
+                  <div key={t.title} style={{ background: "#0a1f35", border: `1px solid ${t.color}33`, borderRadius: 10, padding: 16 }}>
+                    <div style={{ color: t.color, fontWeight: 700, fontSize: 13, marginBottom: 10 }}>{t.title}</div>
+                    {t.items.map((item, i) => (
+                      <div key={i} style={{ color: "#8aa3c1", fontSize: 12, lineHeight: 1.8 }}>
+                        <span style={{ color: t.color }}>›</span> {item}
+                      </div>
+                    ))}
+                  </div>
+                ))}
+              </div>
+
+              <CodeBlock title="deploy_strategies.py" code={`import sagemaker
+
+# ── 1. Real-Time Endpoint (most common) ──────────────────────────
+predictor = xgb.deploy(
+    initial_instance_count=1,
+    instance_type='ml.m5.large',
+    endpoint_name='my-realtime-endpoint',
+)
+
+# ── 2. Auto-Scaling Configuration ────────────────────────────────
+import boto3
+client = boto3.client('application-autoscaling')
+
+client.register_scalable_target(
+    ServiceNamespace='sagemaker',
+    ResourceId='endpoint/my-realtime-endpoint/variant/AllTraffic',
+    ScalableDimension='sagemaker:variant:DesiredInstanceCount',
+    MinCapacity=1,
+    MaxCapacity=10,
+)
+client.put_scaling_policy(
+    PolicyName='ScaleOnRequests',
+    ServiceNamespace='sagemaker',
+    ResourceId='endpoint/my-realtime-endpoint/variant/AllTraffic',
+    ScalableDimension='sagemaker:variant:DesiredInstanceCount',
+    PolicyType='TargetTrackingScaling',
+    TargetTrackingScalingPolicyConfiguration={
+        'TargetValue': 1000.0,   # requests per minute per instance
+        'PredefinedMetricSpecification': {
+            'PredefinedMetricType': 'SageMakerVariantInvocationsPerInstance'
+        },
+    },
+)
+
+# ── 3. A/B Testing with Traffic Routing ──────────────────────────
+from sagemaker.session import production_variant
+
+v1 = production_variant('ModelV1', 'ml.m5.large', initial_weight=80)
+v2 = production_variant('ModelV2', 'ml.m5.large', initial_weight=20)
+
+sagemaker.Session().endpoint_from_production_variants(
+    name='ab-test-endpoint', production_variants=[v1, v2]
+)
+print("🌐 A/B endpoint serving 80% → V1, 20% → V2")`} />
+
+              <CodeBlock title="invoke_and_monitor.py" code={`import boto3
+
+runtime  = boto3.client('sagemaker-runtime')
+cloudwatch = boto3.client('cloudwatch')
+
+# ── Invoke Endpoint ───────────────────────────────────────────────
+resp = runtime.invoke_endpoint(
+    EndpointName='titanic-survivor-endpoint',
+    ContentType='text/csv',
+    Body='3,1,22,1,0,7.25,2',
+)
+prob = float(resp['Body'].read())
+print(f"Survival prob: {prob:.1%}")
+
+# ── Check Endpoint Metrics in CloudWatch ─────────────────────────
+metrics = cloudwatch.get_metric_statistics(
+    Namespace='AWS/SageMaker',
+    MetricName='Invocations',
+    Dimensions=[{'Name': 'EndpointName', 'Value': 'titanic-survivor-endpoint'}],
+    StartTime='2024-01-01T00:00:00Z',
+    EndTime='2024-01-02T00:00:00Z',
+    Period=3600,
+    Statistics=['Sum'],
+)
+print("Hourly invocations:", [m['Sum'] for m in metrics['Datapoints']])`} />
+
+              <div style={{ background: "#0d2137", border: "1px solid #E1705555", borderRadius: 12, padding: 20 }}>
+                <div style={{ color: "#E17055", fontWeight: 700, fontSize: 14, marginBottom: 12 }}>📊 Model Monitor — Catching Drift</div>
+                <p style={{ color: "#8aa3c1", fontSize: 13, lineHeight: 1.7, marginTop: 0 }}>
+                  After deployment, Model Monitor runs on a schedule, comparing incoming inference data against your training baseline. If it detects that feature distributions have shifted (data drift) or model accuracy has degraded (model drift), it fires a CloudWatch alarm — which can trigger a Lambda to kick off a retraining pipeline automatically.
+                </p>
+                <CodeBlock title="model_monitor.py" code={projectCode.monitoring} />
+              </div>
+            </div>
+          )}
+
+        </div>
+      </div>
+    </div>
+  );
+}
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(<SageMakerGuide />);
+    </script>
+  </body>
+</html>
